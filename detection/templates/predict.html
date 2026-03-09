@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- SAME CSS AS upload.html -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/upload.css' %}">
+
+    <title>SQLi Security | Dashboard</title>
+</head>
+
+<body>
+
+<!-- Navbar (UNCHANGED STYLE) -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="{% url 'index' %}">
+        <img width="150px" src="{% static 'assets/logoWhite.png' %}" alt="OWC Logo">
+    </a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item me-3 text-light mt-2">
+                <i class="fa fa-user"></i>
+                Welcome, <b>{{ request.user.username }}</b>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">
+                    <i class="fa fa-sign-out"></i> Logout
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'history' %}">
+                    <i class="fa fa-sign-out"></i> History
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'chatbot' %}">
+                    <i class="fa fa-comments"></i> Chatbot
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Dashboard Container -->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-7 mx-auto">
+
+            <div class="text-center mb-4">
+                <h3>SQL Injection Detection Dashboard</h3>
+                <p class="text-muted">
+                    AI-powered security monitoring using Machine Learning
+                </p>
+            </div>
+
+            <div class="wrapper">
+                <div class="upload-container">
+                    <div class="border-container text-center">
+
+                        <!-- Loading Animation -->
+                        <div class="mb-4">
+                            <img src="{% static 'assets/loader.gif' %}"
+                                 alt="Loading"
+                                 style="width:120px;">
+                            <p class="mt-2">Monitoring system activity...</p>
+                        </div>
+
+                        <!-- About Application -->
+                        <div class="mt-4">
+                            <h5>
+                                <i class="fa fa-shield"></i> About This Application
+                            </h5>
+
+                            <p class="mt-3 text-start">
+                                The <b>SQL Injection Detection and Prevention System</b> is designed
+                                to protect web applications from malicious database attacks.
+                                <br><br>
+                                This system uses <b>Machine Learning models</b>, primarily
+                                <b>Random Forest</b>, to analyze user inputs and detect SQL injection
+                                patterns in real time.
+                                <br><br>
+                                Repeated malicious attempts automatically trigger
+                                <b>email-based verification</b> and
+                                <b>Google authentication</b> to ensure secure access.
+                            </p>
+
+                            <a href="{% url 'predict' %}"
+                               class="submitDoc mt-4 btn btn-primary w-100">
+                                <i class="fa fa-play"></i> Start Detection
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="mt-5 text-center">
+    <p class="text-muted">© 2025 | Crafted with ❤️ by OWC Team</p>
+</footer>
+
+<!-- Scripts (UNCHANGED) -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/js/all.min.js"></script>
+
+</body>
+</html>

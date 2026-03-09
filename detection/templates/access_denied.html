@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Access Denied</title>
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- FontAwesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+<style>
+
+body{
+background:#f5f7fb;
+font-family: 'Segoe UI', sans-serif;
+display:flex;
+align-items:center;
+justify-content:center;
+height:100vh;
+}
+
+/* card */
+
+.security-card{
+
+background:white;
+padding:50px;
+border-radius:15px;
+box-shadow:0 10px 30px rgba(0,0,0,0.1);
+text-align:center;
+width:500px;
+
+animation:fadeIn 1s ease;
+
+}
+
+/* icon animation */
+
+.icon{
+
+font-size:60px;
+color:#dc3545;
+margin-bottom:15px;
+animation:pulse 1.5s infinite;
+
+}
+
+@keyframes pulse{
+
+0%{transform:scale(1)}
+50%{transform:scale(1.15)}
+100%{transform:scale(1)}
+
+}
+
+@keyframes fadeIn{
+
+from{
+opacity:0;
+transform:translateY(20px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+.ip-box{
+
+background:#f1f3f6;
+padding:8px 15px;
+border-radius:6px;
+display:inline-block;
+margin-top:10px;
+font-weight:600;
+
+}
+
+.contact{
+
+margin-top:25px;
+padding:20px;
+background:#f9fafc;
+border-radius:10px;
+
+}
+
+.contact i{
+
+color:#198754;
+margin-right:8px;
+
+}
+
+.footer{
+
+margin-top:20px;
+font-size:13px;
+color:#888;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="security-card">
+
+<i class="fa-solid fa-ban icon"></i>
+
+<h2 class="text-danger">ACCESS DENIED</h2>
+
+<h5 class="text-muted">Your IP has been blocked for malicious activity</h5>
+
+<div class="ip-box">
+Blocked IP : {{ ip }}
+</div>
+
+<p class="mt-3">
+If you believe this is a mistake please contact the administrator.
+</p>
+
+<div class="contact">
+
+<h6>
+<i class="fa-solid fa-user-shield"></i>
+Administrator Contact
+</h6>
+
+<p class="mb-1">
+<i class="fa-solid fa-envelope"></i>
+admin@securitysystem.com
+</p>
+
+<p>
+<i class="fa-solid fa-phone"></i>
++91 98765 43210
+</p>
+
+</div>
+
+<div class="footer">
+SQL Injection Protection System
+</div>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,421 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<link rel="stylesheet" href="{% static 'css/upload.css' %}">
+
+<title>SQL Injection Detection History</title>
+
+</head>
+
+<body>
+
+<!-- NAVBAR (same as upload.html) -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+<a class="navbar-brand" href="{% url 'index' %}">
+<img width="150px" src="{% static 'assets/logoWhite.png' %}">
+</a>
+
+<div class="collapse navbar-collapse justify-content-end">
+
+<ul class="navbar-nav">
+
+<li class="nav-item me-3">
+<a class="nav-link" href="{% url 'predict' %}">
+<i class="fa fa-search"></i> Detection
+</a>
+</li>
+
+<li class="nav-item me-3">
+<a class="nav-link active" href="{% url 'history' %}">
+<i class="fa fa-history"></i> History
+</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="{% url 'logout' %}">
+<i class="fa fa-sign-out"></i> Logout
+</a>
+</li>
+
+</ul>
+
+</div>
+</nav>
+
+
+<!-- MAIN CONTAINER -->
+<div class="container mt-5">
+
+<div class="text-center mb-4">
+<h3><i class="fa fa-shield"></i> SQL Injection Detection Dashboard</h3>
+</div>
+
+
+<!-- STATISTICS -->
+<div class="row text-center mb-4">
+
+<div class="col-md-4">
+<div class="card p-3 shadow">
+
+<h5><i class="fa fa-database"></i> Total Requests</h5>
+
+<h2>{{ total_requests }}</h2>
+
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card p-3 shadow">
+
+<h5><i class="fa fa-bug"></i> Total Attacks</h5>
+
+<h2 style="color:red">{{ total_attacks }}</h2>
+
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card p-3 shadow">
+
+<h5><i class="fa fa-check-circle"></i> Normal Requests</h5>
+
+<h2 style="color:green">{{ normal_requests }}</h2>
+
+</div>
+</div>
+
+</div>
+
+
+<!-- GRAPHS -->
+<div class="row mb-5">
+
+    <div class="col-md-6">
+    
+    <div class="card p-4 shadow">
+    
+    <h5 class="text-center mb-3">
+    <i class="fa fa-bar-chart"></i> Attack vs Normal Requests
+    </h5>
+    
+    <canvas id="barChart" style="height:300px;"></canvas>
+    
+    </div>
+    
+    </div>
+    
+    
+    <div class="col-md-6">
+    
+    <div class="card p-4 shadow">
+    
+    <h5 class="text-center mb-3">
+    <i class="fa fa-pie-chart"></i> Attack Distribution
+    </h5>
+    
+    <canvas id="pieChart" style="height:300px;"></canvas>
+    
+    </div>
+    
+    </div>
+    
+    </div>
+    
+    
+    <!-- LIVE ATTACK GRAPH -->
+    
+    <div class="card shadow p-4 mb-5">
+    
+    <h5 class="text-center mb-3">
+    <i class="fa fa-line-chart"></i> Live Attack Monitoring
+    </h5>
+    
+    <canvas id="liveChart" style="height:250px;"></canvas>
+    
+    </div>
+
+
+<!-- LOG TABLE -->
+
+<div class="card shadow p-4">
+
+<h4 class="mb-3">
+<i class="fa fa-list"></i> Detection Logs
+</h4>
+
+<table class="table table-bordered table-striped">
+
+    <thead class="table-dark">
+    
+    <tr>
+    
+    <th>IP Address</th>
+    
+    <th>Timestamp</th>
+    
+    <th>Input Query</th>
+    
+    <th>Prediction</th>
+    
+    <th>Risk</th>
+    
+    <th>Actions</th>
+    
+    </tr>
+    
+    </thead>
+    
+    <tbody>
+    
+    {% for log in logs %}
+    
+    <tr>
+    
+    <td>
+    <b>{{ log.ip_address }}</b>
+    </td>
+    
+    <td>{{ log.created_at }}</td>
+    
+    <td style="max-width:250px;word-wrap:break-word;">
+    {{ log.input_query }}
+    </td>
+    
+    <td>{{ log.prediction }}</td>
+    
+    <td>
+    
+    {% if log.risk_level == "High" %}
+    <span class="badge bg-danger">High</span>
+    
+    {% elif log.risk_level == "Medium" %}
+    <span class="badge bg-warning text-dark">Medium</span>
+    
+    {% else %}
+    <span class="badge bg-success">Low</span>
+    
+    {% endif %}
+    
+    </td>
+    
+    <td>
+    
+    <!-- DELETE LOG -->
+    <a href="{% url 'delete_log' log.id %}" 
+    class="btn btn-sm btn-danger mb-1">
+    
+    <i class="fa fa-trash"></i>
+    
+    </a>
+    
+    
+    <!-- BLOCK IP -->
+    <a href="{% url 'block_ip' log.ip_address %}" 
+    class="btn btn-sm btn-dark mb-1">
+    
+    <i class="fa fa-ban"></i> Block
+    
+    </a>
+    
+    
+    <!-- UNBLOCK IP -->
+    <a href="{% url 'unblock_ip' log.ip_address %}" 
+    class="btn btn-sm btn-success mb-1">
+    
+    <i class="fa fa-unlock"></i> Unblock
+    
+    </a>
+    
+    </td>
+    
+    </tr>
+    
+    {% endfor %}
+    
+    </tbody>
+    
+</table>
+
+
+<a href="{% url 'download_logs' %}" class="btn btn-success mt-2">
+
+<i class="fa fa-download"></i> Download Logs
+
+</a>
+
+</div>
+
+</div>
+
+
+
+<script>
+const total_attacks = {{ total_attacks }};
+const normal_requests = {{ normal_requests }};
+
+
+// BAR CHART (Gradient Modern)
+const barCtx = document.getElementById("barChart").getContext("2d");
+
+const gradient1 = barCtx.createLinearGradient(0,0,0,400);
+gradient1.addColorStop(0,"#ff4d6d");
+gradient1.addColorStop(1,"#ff758f");
+
+const gradient2 = barCtx.createLinearGradient(0,0,0,400);
+gradient2.addColorStop(0,"#06d6a0");
+gradient2.addColorStop(1,"#1dd3b0");
+
+new Chart(barCtx, {
+
+type:'bar',
+
+data:{
+labels:["Attacks","Normal"],
+
+datasets:[{
+
+data:[total_attacks,normal_requests],
+
+backgroundColor:[gradient1,gradient2],
+
+borderRadius:10,
+
+barThickness:80
+
+}]
+
+},
+
+options:{
+responsive:true,
+plugins:{legend:{display:false}}
+}
+
+});
+
+
+// PIE / DONUT CHART (Cyber style)
+
+new Chart(document.getElementById("pieChart"),{
+
+type:'doughnut',
+
+data:{
+
+labels:["Attacks","Normal"],
+
+datasets:[{
+
+data:[total_attacks,normal_requests],
+
+backgroundColor:[
+
+"#ff4d6d",
+"#06d6a0"
+
+],
+
+borderWidth:0
+
+}]
+
+},
+
+options:{
+cutout:"60%",
+plugins:{
+legend:{
+position:"bottom"
+}
+}
+
+}
+
+});
+
+
+
+// LIVE ATTACK GRAPH (Real-time style)
+
+const liveCtx = document.getElementById("liveChart");
+
+new Chart(liveCtx,{
+
+type:"line",
+
+data:{
+
+labels:["1","2","3","4","5","6"],
+
+datasets:[{
+
+label:"Attack Activity",
+
+data:[
+total_attacks,
+total_attacks+1,
+total_attacks,
+total_attacks+2,
+total_attacks,
+total_attacks+1
+],
+
+borderColor:"#ff4d6d",
+
+backgroundColor:"rgba(255,77,109,0.1)",
+
+fill:true,
+
+tension:0.4
+
+}]
+
+},
+
+options:{
+
+responsive:true,
+
+plugins:{
+legend:{display:false}
+},
+
+scales:{
+y:{
+beginAtZero:true
+}
+}
+
+}
+
+});
+
+</script>
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
